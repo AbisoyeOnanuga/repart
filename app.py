@@ -11,6 +11,44 @@ import os
 from ravendb import DocumentStore
 from gravitee import Gravitee
 
+# Define the Item class
+class Item:
+    def __init__(self, id, name, price, location, description, category, user_id, lon, lat, gpuspeed, gpuprocessor):
+        self.id = id
+        self.name = name
+        self.price = price
+        self.location = location
+        self.lon = lon
+        self.lat = lat
+        self.description = description
+        self.category = category
+        self.user_id = user_id
+        self.gpuspeed = gpuspeed
+        self.gpuprocessor = gpuprocessor
+
+    def __repr__(self):
+        return f"Item(id={self.id}, name={self.name}, price={self.price}, location={self.location}, description={self.description}, category={self.category}, user_id={self.user_id})"
+
+# Define the config module
+class Config:
+    # Define the secret key for Flask
+    SECRET_KEY = os.environ.get("SECRET_KEY") or "secret"
+
+    # Define the Google OAuth credentials
+    GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+    GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+    GOOGLE_DISCOVERY_URL = (
+        "https://accounts.google.com/.well-known/openid-configuration"
+    )
+
+    # Define the RavenDB URL and database name
+    RAVENDB_URL = os.environ.get("RAVENDB_URL") or "http://localhost:8080"
+    RAVENDB_DATABASE = os.environ.get("RAVENDB_DATABASE") or "repart"
+
+    # Define the Gravitee API key and base URL
+    GRAVITEE_API_KEY = os.environ.get("GRAVITEE_API_KEY")
+    GRAVITEE_BASE_URL = os.environ.get("GRAVITEE_BASE_URL") or "https://api.gravitee.io"
+
 # Create a Flask app instance
 app = Flask(__name__)
 
