@@ -1,86 +1,94 @@
-# Import the requests and json modules
+# Import the libraries
 import requests
 import json
-# Import BeautifulSoup for HTML parsing
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 
-# Define the base URL and the query parameters
-base_url = "https://www.ebay.ca/sch/i.html"
-query_params = {
-    "_dcat": "27386",
-    "_fsrp": "1",
-    "rt": "nc",
-    "_from": "R40",
-    "_nkw": "graphics card",
-    "_sacat": "0",
-    "Chipset%20Manufacturer": "NVIDIA|AMD",
-    "LH_ItemCondition": "3000|2500|2030|2020|2010|2000|1500"
-}
+# The URL to scrape
+url = "https://www.ebay.ca/sch/i.html?_fsrp=1&_from=R40&_nkw=graphics+card&_sacat=0&LH_ItemCondition=3000%7C2500%7C2030%7C2020%7C2010%7C2000%7C1500&_stpos=M5A2N3&_fcid=2&LH_PrefLoc=3&imm=1&rt=nc&Chipset%2520Manufacturer=NVIDIA&_oaa=1&_dcat=27386"
 
-# Initialize the page number and the data list
-page = 1
-data = []
+# Make the HTTP request and get the HTML response
+response = requests.get(url)
 
-# Loop through the pages until the status code is not 200 or the page number is greater than 10
-while True:
-    # Add the page parameter to the query parameters
-    query_params["_pgn"] = str(page)
-    # Make the request and get the response
-    response = requests.get(base_url, params=query_params)
-    # Check the status code
-    if response.status_code == 200:
-        # Convert the response to HTML using BeautifulSoup
-        html = BeautifulSoup(response.text, "html.parser")
-        # Find all the list elements with the class name "s-item"
-        items = html.find_all("li", class_="s-item")
-        # Loop through each list element
-        for item in items:
-            # Initialize an empty dictionary to store the data
-            item_data = {}
-            # Extract the title using the class name "s-item__title"
-            title = item.find("h3", class_="s-item__title")
-            if title:
-                item_data["title"] = title.text
-            # Extract the subtitle using the class name "s-item__subtitle"
-            subtitle = item.find("div", class_="s-item__subtitle")
-            if subtitle:
-                item_data["subtitle"] = subtitle.text
-            # Extract the reviews using the class name "s-item__reviews"
-            reviews = item.find("span", class_="s-item__reviews")
-            if reviews:
-                item_data["reviews"] = reviews.text
-            # Extract the price using the class name "s-item__price"
-            price = item.find("span", class_="s-item__price")
-            if price:
-                item_data["price"] = price.text
-            # Extract the seller info using the class name "s-item__seller-info"
-            seller_info = item.find("span", class_="s-item__seller-info")
-            if seller_info:
-                item_data["seller_info"] = seller_info.text
-            # Extract the purchase options using the class name "s-item__purchaseOptions"
-            purchase_options = item.find("div", class_="s-item__purchaseOptions")
-            if purchase_options:
-                item_data["purchase_options"] = purchase_options.text
-            # Extract the shipping cost using the class name "s-item__logisticsCost"
-            shipping_cost = item.find("span", class_="s-item__logisticsCost")
-            if shipping_cost:
-                item_data["shipping_cost"] = shipping_cost.text
-            # Extract the location using the class name "s-item__Location"
-            location = item.find("span", class_="s-item__Location")
-            if location:
-                item_data["location"] = location.text
-            # Extract the quantity sold using the class name "s-item__quantitySold"
-            quantity_sold = item.find("span", class_="s-item__quantitySold")
-            if quantity_sold:
-                item_data["quantity_sold"] = quantity_sold.text
-            # Append the data to the data list
-            data.append(item_data)
-        # Increment the page number
-        page += 1
-    else:
-        # Break the loop if the status code is not 200
-        break
+# Check the status code
+if response.status_code == 200:
+    # Parse the HTML using BeautifulSoup
+    soup = BeautifulSoup(response.text, "html.parser")
 
-# Save the data list to a JSON file
-with open("ebay_data.json", "w") as f:
-    json.dump(data, f)
+    # Create an empty list to store the scraped data
+    data = []
+
+    # Find all the product items on the page
+    items = soup.find_all("div", class_="s-item__info clearfix")
+
+    # Loop through each item
+    for item in items:
+        # Initialize an empty dictionary to store the item data
+        item_data = {}
+
+        # Extract the title using the class name "s-item__title"
+        title = item.find("div", class_="s-item__title")
+        if title:
+            # Find all the elements with the class name "LIGHT_HIGHLIGHT"
+            labels = title.find_all("span", class_="LIGHT_HIGHLIGHT")
+            # Remove the elements from the title element
+            [label.extract() for label in labels]
+            # Get the remaining text from the title element
+            item_data["title"] = title.text
+
+        # Extract the item title using the class name "s-item__subtitle"
+        subtitle = item.find("div", class_="s-item__subtitle")
+        if subtitle:
+            item_data["condition"] = subtitle.text
+
+        # Extract the price using the class name "s-item__price"
+        price = item.find("span", class_="s-item__price")
+        if price:
+            item_data["price"] = price.text
+
+        # Extract the seller info using the class name "s-item__seller-info"
+        seller = item.find("span", class_="s-item__seller-info")
+        if seller:
+            item_data["seller-info"] = seller.text
+
+        # Extract the offer using the class name "s-item__price"
+        offer = item.find("span", class_="s-item__purchase-options s-item__purchaseOptions")
+        if offer:
+            item_data["purchase-optpions"] = offer.text
+
+        # Extract the link using the class name "s-item__link"
+        link = item.find("a", class_="s-item__link")
+        if link:
+            item_data["link"] = link["href"]
+
+        # Extract the condition using the class name "SECONDARY_INFO"
+        #condition = item.find("span", class_="SECONDARY_INFO")
+        #if condition:
+        #    item_data["condition"] = condition.text
+
+        # Extract the shipping cost using the class name "s-item__shipping s-item__logisticsCost"
+        shipping = item.find("span", class_="s-item__shipping s-item__logisticsCost")
+        if shipping:
+            item_data["shipping"] = shipping.text
+
+        # Extract the location using the class name "s-item__location"
+        location = item.find("span", class_="s-item__location s-item__itemLocation")
+        if location:
+            item_data["location"] = location.text
+        
+        # Extract the item title using the class name "s-item__title"
+        reviews = item.find("span", class_="s-item__reviews")
+        if title:
+            item_data["title"] = title.text
+
+        # Append the item data to the data list
+        data.append(item_data)
+
+    # Save the data to a JSON file
+    with open("ebay_data.json", "w") as f:
+        json.dump(data, f, indent=4)
+
+    # Print a success message
+    print("Data scraped and saved to ebay_data.json")
+else:
+    # Print an error message
+    print("Request failed with status code:", response.status_code)
