@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Display the product title -->
+            <h1>{{ product.title }}</h1>
+            <!-- Display the product price and condition -->
+            <p>{{ product.price }}</p>
+            <p>{{ product.condition }}</p>
+            <!-- Display a button to add the product to the cart -->
+            <a href="#" class="btn btn-primary">Add to cart</a>
+        </div>
+        <div class="col-md-6">
+            <!-- Display the product link and shipping -->
+            <p><a href="{{ product.link }}">View on eBay</a></p>
+            <p>{{ product.shipping }}</p>
+            <!-- Display the product location and quantity sold -->
+            <p>{{ product.location }}</p>
+            <p>{{ product.quantity_sold }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

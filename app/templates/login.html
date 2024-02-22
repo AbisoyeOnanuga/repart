@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <!-- Display the login form -->
+            <form method="POST" action="">
+                <!-- Generate the hidden CSRF token field -->
+                {{ form.csrf_token }}
+                <!-- Display the email field -->
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="form-control") }}
+                    <!-- Display the email field errors -->
+                    {% for error in form.email.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the password field -->
+                <div class="form-group">
+                    {{ form.password.label }}
+                    {{ form.password(class="form-control") }}
+                    <!-- Display the password field errors -->
+                    {% for error in form.password.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the submit button -->
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+            <!-- Display a link to the register page -->
+            <p>Don't have an account? <a href="{% url_for('register') %}">Register here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

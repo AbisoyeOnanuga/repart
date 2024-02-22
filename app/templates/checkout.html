@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Display the checkout form -->
+            <form method="POST" action="">
+                <!-- Generate the hidden CSRF token field -->
+                {{ form.csrf_token }}
+                <!-- Display the name field -->
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(class="form-control") }}
+                    <!-- Display the name field errors -->
+                    {% for error in form.name.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the email field -->
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="form-control") }}
+                    <!-- Display the email field errors -->
+                    {% for error in form.email.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the address field -->
+                <div class="form-group">
+                    {{ form.address.label }}
+                    {{ form.address(class="form-control") }}
+                    <!-- Display the address field errors -->
+                    {% for error in form.address.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the city field -->
+                <div class="form-group">
+                    {{ form.city.label }}
+                    {{ form.city(class="form-control") }}
+                    <!-- Display the city field errors -->
+                    {% for error in form.city.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the state field -->
+                <div class="form-group">
+                    {{ form.state.label }}
+                    {{ form.state(class="form-control") }}
+                    <!-- Display the state field errors -->
+                    {% for error in form.state.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the zip code field -->
+                <div class="form-group">
+                    {{ form.zip_code.label }}
+                    {{ form.zip_code(class="form-control") }}
+                    <!-- Display the zip code field errors -->
+                    {% for error in form.zip_code.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the payment field -->
+                <div class="form-group">
+                    {{ form.payment.label }}
+                    <!-- Loop through the payment choices -->
+                    {% for subfield in form.payment %}
+                    <div class="form-check">
+                        <!-- Display the radio button and label for each choice -->
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                    {% endfor %}
+                    <!-- Display the payment field errors -->
+                    {% for error in form.payment.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the submit button -->
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <!-- Display the order summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Display the order total -->
+                    <p class="card-text">Total: {{ order.get_total }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

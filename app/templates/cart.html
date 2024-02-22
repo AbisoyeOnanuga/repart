@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Display the order items in a table -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through the order items from the view -->
+                    {% for order_item in order_items %}
+                    <tr>
+                        <!-- Display the product title and link to the product detail page -->
+                        <td><a href="{% url_for('product_detail', id=order_item.product.id) %}">{{ order_item.product.title }}</a></td>
+                        <!-- Display the product price -->
+                        <td>{{ order_item.product.price }}</td>
+                        <!-- Display the order item quantity -->
+                        <td>{{ order_item.quantity }}</td>
+                        <!-- Display the order item subtotal -->
+                        <td>{{ order_item.product.price * order_item.quantity }}</td>
+                        <!-- Display a button to remove the order item from the cart -->
+                        <td><a href="#" class="btn btn-danger">Remove</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <!-- Display the order summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Display the order total -->
+                    <p class="card-text">Total: {{ order.get_total }}</p>
+                    <!-- Display a button to proceed to checkout -->
+                    <a href="{% url_for('checkout') %}" class="btn btn-primary">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

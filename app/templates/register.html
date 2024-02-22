@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <!-- Display the register form -->
+            <form method="POST" action="">
+                <!-- Generate the hidden CSRF token field -->
+                {{ form.csrf_token }}
+                <!-- Display the name field -->
+                <div class="form-group">
+                    {{ form.name.label }}
+                    {{ form.name(class="form-control") }}
+                    <!-- Display the name field errors -->
+                    {% for error in form.name.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the email field -->
+                <div class="form-group">
+                    {{ form.email.label }}
+                    {{ form.email(class="form-control") }}
+                    <!-- Display the email field errors -->
+                    {% for error in form.email.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the password field -->
+                <div class="form-group">
+                    {{ form.password.label }}
+                    {{ form.password(class="form-control") }}
+                    <!-- Display the password field errors -->
+                    {% for error in form.password.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the confirm password field -->
+                <div class="form-group">
+                    {{ form.confirm_password.label }}
+                    {{ form.confirm_password(class="form-control") }}
+                    <!-- Display the confirm password field errors -->
+                    {% for error in form.confirm_password.errors %}
+                    <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Display the submit button -->
+                <div class="form-group">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+            <!-- Display a link to the login page -->
+            <p>Already have an account? <a href="{% url_for('login') %}">Login here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
