@@ -1,52 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>RePart - Home</title>
-    <!-- Link to Bootstrap CDN -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Link to local main.css file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
-<body>
-    <!-- Create a navbar with a logo and a cart icon -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" width="100" height="50">
-            </a>
-            <a class="nav-link" href="{% url_for('cart') %}">
-                <img src="{{ url_for('static', filename='cart.png') }}" alt="Cart" width="50" height="50">
-            </a>
-        </div>
-    </nav>
-    <!-- Create a container for the products -->
-    <div class="container">
-        <!-- Create a row for the products -->
-        <div class="row">
-            <!-- Loop through the products from the view -->
-            {% for product in products %}
-            <!-- Create a column for each product -->
-            <div class="col-md-4">
-                <!-- Create a card for each product -->
-                <div class="card">
-                    <!-- Display the product title and link to the product detail page -->
-                    <div class="card-header">
-                        <a href="{% url_for('product_detail', id=product.id) %}">
-                            <h5 class="card-title">{{ product.title }}</h5>
-                        </a>
-                    </div>
-                    <!-- Display the product price and condition -->
-                    <div class="card-body">
-                        <p class="card-text">{{ product.price }}</p>
-                        <p class="card-text">{{ product.condition }}</p>
-                        <!-- Display a button to add the product to the cart -->
-                        <a href="#" class="btn btn-primary">Add to cart</a>
-                    </div>
+{% extends "base.html" %}
+<!-- Override the content block -->
+{% block content %}
+<div class="container">
+    <!-- Create a row for the products -->
+    <div class="row">
+        <!-- Loop through the products from the view -->
+        {% for product in products %}
+        <!-- Create a column for each product -->
+        <div class="col-md-4">
+            <!-- Create a card for each product -->
+            <div class="card">
+                <!-- Display the product title and link to the product detail page -->
+                <div class="card-header">
+                    <a href="{% url_for('product_detail', id=product.id) %}">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                    </a>
+                </div>
+                <!-- Display the product price and condition -->
+                <div class="card-body">
+                    <p class="card-text">{{ product.price }}</p>
+                    <p class="card-text">{{ product.condition }}</p>
+                    <!-- Display a button to add the product to the cart -->
+                    <a href="#" class="btn btn-primary">Add to cart</a>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
-</body>
-</html>
+</div>
+{% endblock %}
